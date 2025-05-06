@@ -45,7 +45,7 @@ export default function ServiceContactWidget1() {
           </div>
         </div>
         <div className="d-grid mt30">
-          <Link to="/freelancer-single" className="ud-btn btn-thm-border">
+          <Link to="/freelancer-single/1" className="ud-btn btn-thm-border">
             Contact Me
             <i className="fal fa-arrow-right-long" />
           </Link>

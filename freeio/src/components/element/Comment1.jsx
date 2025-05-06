@@ -86,8 +86,8 @@ export default function Comment1() {
             </div>
             <div className="col-md-12">
               <div className="position-relative bdrb1 pb50">
-                <Link to="/service-single" className="ud-btn btn-light-thm">
-                  See More
+                <Link to="/service-1" className="ud-btn btn-light-thm">
+                  Browse similar services
                   <i className="fal fa-arrow-right-long" />
                 </Link>
               </div>

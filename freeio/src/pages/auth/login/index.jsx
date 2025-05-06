@@ -1,6 +1,35 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAuthStore from "../../../store/authStore";
 
 export default function LoginPage() {
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const { login, isLoading } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials({ ...credentials, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!credentials.email || !credentials.password) {
+      setError("Please enter both email and password");
+      return;
+    }
+
+    try {
+      await login(credentials);
+      navigate("/"); // Redirect to home page after successful login
+    } catch (err) {
+      setError(err.message || "Login failed. Please try again.");
+    }
+  };
+
   return (
     <>
       <section className="our-login">
@@ -31,39 +60,58 @@ export default function LoginPage() {
                     </Link>
                   </p>
                 </div>
-                <div className="mb20">
-                  <label className="form-label fw600 dark-color">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="alitfn58@gmail.com"
-                  />
-                </div>
-                <div className="mb15">
-                  <label className="form-label fw600 dark-color">
-                    Password
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="*******"
-                  />
-                </div>
-                <div className="checkbox-style1 d-block d-sm-flex align-items-center justify-content-between mb20">
-                  <label className="custom_checkbox fz14 ff-heading">
-                    Remember me
-                    <input type="checkbox" defaultChecked="checked" />
-                    <span className="checkmark" />
-                  </label>
-                  <a className="fz14 ff-heading">Lost your password?</a>
-                </div>
-                <div className="d-grid mb20">
-                  <button className="ud-btn btn-thm" type="button">
-                    Log In <i className="fal fa-arrow-right-long" />
-                  </button>
-                </div>
+                {error && (
+                  <div className="alert alert-danger" role="alert">
+                    {error}
+                  </div>
+                )}
+                <form onSubmit={handleSubmit}>
+                  <div className="mb20">
+                    <label className="form-label fw600 dark-color">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="email@example.com"
+                      name="email"
+                      value={credentials.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="mb15">
+                    <label className="form-label fw600 dark-color">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="*******"
+                      name="password"
+                      value={credentials.password}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="checkbox-style1 d-block d-sm-flex align-items-center justify-content-between mb20">
+                    <label className="custom_checkbox fz14 ff-heading">
+                      Remember me
+                      <input type="checkbox" defaultChecked="checked" />
+                      <span className="checkmark" />
+                    </label>
+                    <a className="fz14 ff-heading">Lost your password?</a>
+                  </div>
+                  <div className="d-grid mb20">
+                    <button 
+                      className="ud-btn btn-thm" 
+                      type="submit"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Logging in..." : "Log In"} {!isLoading && <i className="fal fa-arrow-right-long" />}
+                    </button>
+                  </div>
+                </form>
                 <div className="hr_content mb20">
                   <hr />
                   <span className="hr_top_text">OR</span>

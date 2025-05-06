@@ -1,7 +1,10 @@
 import { useLocation } from "react-router-dom";
 
-export default function Pagination1({ currentPage = 1, totalPages = 10, totalItems = 0, onPageChange }) {
+export default function Pagination1({ currentPage = 1, itemsPerPage = 12, totalItems = 0, paginate }) {
   const { pathname } = useLocation();
+  
+  // Calculate total pages
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
   
   // Generate page numbers to display
   const generatePageNumbers = () => {
@@ -41,7 +44,7 @@ export default function Pagination1({ currentPage = 1, totalPages = 10, totalIte
 
   const handlePageClick = (selectedPage) => {
     if (selectedPage !== currentPage && selectedPage !== '...') {
-      onPageChange(selectedPage);
+      paginate(selectedPage);
     }
   };
 
@@ -72,8 +75,8 @@ export default function Pagination1({ currentPage = 1, totalPages = 10, totalIte
   if (totalPages <= 0) return null;
 
   // Calculate display range
-  const startItem = totalItems > 0 ? (currentPage - 1) * 12 + 1 : 0;
-  const endItem = Math.min(currentPage * 12, totalItems);
+  const startItem = totalItems > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
   return (
     <>
@@ -128,10 +131,10 @@ export default function Pagination1({ currentPage = 1, totalPages = 10, totalIte
         <p className="mt10 mb-0 pagination_page_count text-center">
           {totalItems > 0 ? (
             <>
-              {startItem} – {endItem} of {totalItems} services
+              {startItem} – {endItem} of {totalItems} projects
             </>
           ) : (
-            'No services found'
+            'No projects found'
           )}
         </p>
       </div>

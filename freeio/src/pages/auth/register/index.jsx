@@ -1,12 +1,48 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAuthStore from "../../../store/authStore";
 import MetaComponent from "@/components/common/MetaComponent";
+
 const metadata = {
   title: "Freeio - Freelance Marketplace ReactJs Template | Register",
 };
+
 export default function RegisterPage() {
-  <MetaComponent meta={metadata} />;
+  const [userData, setUserData] = useState({ 
+    name: "", 
+    email: "", 
+    password: "",
+    role: "USER" // Default role
+  });
+  const [error, setError] = useState("");
+  const { register, isLoading } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!userData.name || !userData.email || !userData.password) {
+      setError("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      await register(userData);
+      navigate("/"); // Redirect to home page after successful registration
+    } catch (err) {
+      setError(err.message || "Registration failed. Please try again.");
+    }
+  };
+
   return (
     <>
+      <MetaComponent meta={metadata} />
       <section className="our-register">
         <div className="container">
           <div className="row">
@@ -35,52 +71,78 @@ export default function RegisterPage() {
                     </Link>
                   </p>
                 </div>
-                <div className="mb25">
-                  <label className="form-label fw500 dark-color">
-                    Display Name
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="ali"
-                  />
-                </div>
-                <div className="mb25">
-                  <label className="form-label fw500 dark-color">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="alitf"
-                  />
-                </div>
-                <div className="mb25">
-                  <label className="form-label fw500 dark-color">Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="alitfn58@gmail.com"
-                  />
-                </div>
-                <div className="mb15">
-                  <label className="form-label fw500 dark-color">
-                    Password
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="*******"
-                  />
-                </div>
-                <div className="d-grid mb20">
-                  <button
-                    className="ud-btn btn-thm default-box-shadow2"
-                    type="button"
-                  >
-                    Creat Account <i className="fal fa-arrow-right-long" />
-                  </button>
-                </div>
+                {error && (
+                  <div className="alert alert-danger" role="alert">
+                    {error}
+                  </div>
+                )}
+                <form onSubmit={handleSubmit}>
+                  <div className="mb25">
+                    <label className="form-label fw500 dark-color">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Your full name"
+                      name="name"
+                      value={userData.name}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="mb25">
+                    <label className="form-label fw500 dark-color">Email</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="email@example.com"
+                      name="email"
+                      value={userData.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="mb15">
+                    <label className="form-label fw500 dark-color">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="*******"
+                      name="password"
+                      value={userData.password}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="mb25">
+                    <label className="form-label fw500 dark-color">
+                      Account Type
+                    </label>
+                    <select
+                      className="form-select form-control"
+                      name="role"
+                      value={userData.role}
+                      onChange={handleChange}
+                    >
+                      <option value="USER">User</option>
+                      <option value="FREELANCER">Freelancer</option>
+                      <option value="EMPLOYER">Employer</option>
+                    </select>
+                  </div>
+                  <div className="d-grid mb20">
+                    <button
+                      className="ud-btn btn-thm default-box-shadow2"
+                      type="submit"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Creating Account..." : "Create Account"}{" "}
+                      {!isLoading && <i className="fal fa-arrow-right-long" />}
+                    </button>
+                  </div>
+                </form>
                 <div className="hr_content mb20">
                   <hr />
                   <span className="hr_top_text">OR</span>

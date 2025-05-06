@@ -4,7 +4,7 @@ export const product1 = [
     img: "/images/listings/g-1.jpg",
     img2: "/images/listings/g-17.jpg",
     category: "Web & App Design",
-    title: "I will design modern websites in figma or adobe xd",
+    title: "I will create responsive website UI/UX design in Figma",
     rating: 4.82,
     review: 94,
     author: {
@@ -106,7 +106,7 @@ export const product1 = [
     img: "/images/listings/g-5.jpg",
     img2: "/images/listings/g-21.jpg",
     category: "Web & App Design",
-    title: "I will design modern websites in figma or adobe xd",
+    title: "I will create professional web design mockups with prototyping",
     rating: 4.82,
     review: 94,
     author: {
@@ -130,7 +130,7 @@ export const product1 = [
     img: "/images/listings/g-6.jpg",
     img2: "/images/listings/g-22.jpg",
     category: "Web & App Design",
-    title: "I will design modern websites in figma or adobe xd",
+    title: "I will design premium landing pages with conversion focus",
     rating: 4.82,
     review: 94,
     author: {
@@ -177,7 +177,7 @@ export const product1 = [
     img: "/images/listings/g-1.jpg",
     img2: "/images/listings/g-18.jpg",
     category: "Web & App Design",
-    title: "I will design modern websites in figma or adobe xd",
+    title: "I will develop custom WordPress themes with modern design",
     rating: 4.82,
     review: 94,
     author: {
@@ -199,7 +199,7 @@ export const product1 = [
     img: "/images/listings/g-9.jpg",
     img2: "/images/listings/g-17.jpg",
     category: "Web & App Design",
-    title: "I will design modern websites in figma or adobe xd",
+    title: "I will create mobile app UI design with user-centered approach",
     rating: 4.82,
     review: 94,
     author: {

@@ -28,9 +28,10 @@ export default function BrowserCategory14() {
             </div>
           </div>
           <div className="col-lg-3">
-            <div className="text-start text-lg-end mb-4 mb-lg-2">
-              <Link className="ud-btn2" to="/service-single">
-                All Categories<i className="fal fa-arrow-right-long"></i>
+            <div className="text-start text-lg-end mb30-lg">
+              <Link className="ud-btn2" to="/service-1">
+                All Services
+                <i className="fal fa-arrow-right-long" />
               </Link>
             </div>
           </div>

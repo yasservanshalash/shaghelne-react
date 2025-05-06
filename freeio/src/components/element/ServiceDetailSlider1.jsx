@@ -6,14 +6,33 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { FreeMode, Navigation, Thumbs } from "swiper";
 
-const gigImages = [
+// Default images if service data not provided
+const defaultImages = [
   "/images/listings/service-details-1.jpg",
   "/images/listings/service-details-1.jpg",
   "/images/listings/service-details-1.jpg",
 ];
 
-export default function ServiceDetailSlider1() {
+export default function ServiceDetailSlider1({ serviceData }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  
+  // Use service images if available, otherwise use defaults
+  const gigImages = serviceData?.images || serviceData?.gallery || defaultImages;
+  
+  // Get service info from provided data or use defaults
+  const deliveryTime = serviceData?.deliveryTime || "1-3 Days";
+  const englishLevel = serviceData?.englishLevel || "Professional";
+  const location = serviceData?.location || "New York";
+
+  // Log the service data being received
+  useEffect(() => {
+    console.log("ServiceDetailSlider1 - Service data received:", 
+      serviceData ? {
+        id: serviceData.id,
+        title: serviceData.title,
+        images: serviceData.images || serviceData.gallery || 'using default images'
+      } : 'No service data');
+  }, [serviceData]);
 
   return (
     <>
@@ -26,7 +45,7 @@ export default function ServiceDetailSlider1() {
               </div>
               <div className="details">
                 <h5 className="title">Delivery Time</h5>
-                <p className="mb-0 text">1-3 Days</p>
+                <p className="mb-0 text">{deliveryTime}</p>
               </div>
             </div>
           </div>
@@ -37,7 +56,7 @@ export default function ServiceDetailSlider1() {
               </div>
               <div className="details">
                 <h5 className="title">English Level</h5>
-                <p className="mb-0 text">Professional</p>
+                <p className="mb-0 text">{englishLevel}</p>
               </div>
             </div>
           </div>
@@ -48,7 +67,7 @@ export default function ServiceDetailSlider1() {
               </div>
               <div className="details">
                 <h5 className="title">Location</h5>
-                <p className="mb-0 text">New York</p>
+                <p className="mb-0 text">{location}</p>
               </div>
             </div>
           </div>

@@ -88,8 +88,9 @@ export default function About15() {
                     ))}
                   </ul>
                 </div>
-                <Link to="/service-single" className="ud-btn btn-dark bdrs16">
-                  See More<i className="fal fa-arrow-right-long"></i>
+                <Link to="/become-seller" className="ud-btn btn-dark bdrs16">
+                  Become a Seller
+                  <i className="fal fa-arrow-right-long" />
                 </Link>
               </div>
             </div>

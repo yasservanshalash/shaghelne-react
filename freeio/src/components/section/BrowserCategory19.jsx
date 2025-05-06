@@ -36,9 +36,9 @@ export default function BrowserCategory19() {
               </div>
             </div>
             <div className="col-lg-3">
-              <div className="text-start text-lg-end mb-4 mb-lg-0">
-                <Link className="ud-btn2" to="/service-single">
-                  All Categories
+              <div className="text-start text-lg-end mb30-lg">
+                <Link className="ud-btn2" to="/service-1">
+                  All Services
                   <i className="fal fa-arrow-right-long" />
                 </Link>
               </div>

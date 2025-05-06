@@ -56,7 +56,7 @@ export default function TrendingServiceCard1({ data }) {
         <div className={`list-content ${pathname === "/home-8" ? "px-0" : ""}`}>
           <p className="list-text body-color fz14 mb-1">{data.category}</p>
           <h5 className="list-title">
-            <Link to={`/service-single/${data.id}`}>
+            <Link to={data.id ? `/service-single/${data.id}` : `/service-single`}>
               {data.title.slice(0, 40) + "..."}
             </Link>
           </h5>

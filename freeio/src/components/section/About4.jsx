@@ -1,6 +1,7 @@
 import { funfactsData2 } from "@/data/fanfact";
 
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function About4() {
   const { pathname } = useLocation();
@@ -188,10 +189,10 @@ export default function About4() {
                       ))}
                     </ul>
                   </div>
-                  <a to="/service-single" className="ud-btn btn-thm2">
-                    See More
+                  <Link to="/service-1" className="ud-btn btn-thm2">
+                    Learn More
                     <i className="fal fa-arrow-right-long" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

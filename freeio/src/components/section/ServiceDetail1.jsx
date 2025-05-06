@@ -7,9 +7,45 @@ import ServiceDetailSlider1 from "../element/ServiceDetailSlider1";
 import { Sticky, StickyContainer } from "react-sticky";
 import useScreen from "@/hook/useScreen";
 import ServiceContactWidget1 from "../element/ServiceContactWidget1";
+import { useParams } from "react-router-dom";
+import { product1 } from "@/data/product";
+import { useEffect } from "react";
 
-export default function ServiceDetail1() {
+export default function ServiceDetail1({ serviceData }) {
   const isMatchedScreen = useScreen(1216);
+  const { id } = useParams();
+  
+  // Use the service data passed through props or find it in the static data as fallback
+  const service = serviceData || (id ? product1.find(item => item.id == id) : product1[0]);
+
+  // Log service data on component render
+  useEffect(() => {
+    if (serviceData) {
+      console.log("ServiceDetail1 - Received service data from props:", serviceData);
+    } else if (service && id) {
+      console.log(`ServiceDetail1 - No props data, found service in product1 with ID=${id}, Title="${service.title}"`);
+    } else if (service) {
+      console.log("ServiceDetail1 - Using default service data:", service);
+    } else {
+      console.log("ServiceDetail1 - No service data available");
+    }
+  }, [serviceData, service, id]);
+
+  // If no service data is available, show a message
+  if (!service) {
+    return (
+      <section className="pt50 pb90">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12 text-center">
+              <h3>Service not found</h3>
+              <p>The requested service could not be found.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>
@@ -19,16 +55,11 @@ export default function ServiceDetail1() {
             <div className="row wrap">
               <div className="col-lg-8">
                 <div className="column">
-                  <ServiceDetailSlider1 />
+                  <ServiceDetailSlider1 serviceData={service} />
                   <div className="service-about">
                     <h4>About</h4>
                     <p className="text mb30">
-                      It is a long established fact that a reader will be
-                      distracted by the readable content of a page when looking
-                      at its layout. The point of using Lorem Ipsum is that it
-                      has a more-or-less normal distribution of letters, as
-                      opposed to using 'Content here, content here', making it
-                      look like readable English.
+                      {service?.description || "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."}
                     </p>
                     <p className="text mb-0">Services I provide:</p>
                     <p className="text mb-0">1{")"} Website Design</p>

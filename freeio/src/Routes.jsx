@@ -98,6 +98,8 @@ import PricingPage from "./pages/pricing";
 import RegisterPage from "./pages/auth/register";
 import TermsPage from "./pages/terms";
 import UIElementsPage from "./pages/ui-elements";
+import JobPage from "./pages/job";
+import JobSinglePage from "./pages/job/job-single";
 
 export default function RoutesComponent() {
   return (
@@ -166,6 +168,10 @@ export default function RoutesComponent() {
           <Route path="job-3" element={<JobPage3 />} />
           <Route path="job-single" element={<JobPageSingle1 />} />
           <Route path="job-single/:id" element={<JobPageSingle11 />} />
+          
+          {/* New Job Routes */}
+          <Route path="jobs" element={<JobPage />} />
+          <Route path="job/:id" element={<JobSinglePage />} />
 
           <Route path="dashboard" element={<DasbPageDashboard />} />
           <Route path="proposal" element={<DasbPageProposal />} />

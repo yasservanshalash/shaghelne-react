@@ -1,20 +1,30 @@
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import ManageJobInfo from "@/components/dashboard/section/ManageJobInfo";
-
-import MobileNavigation2 from "@/components/header/MobileNavigation2";
-
+import ManageJobs from "@/components/dashboard/manage/ManageJobs";
 import MetaComponent from "@/components/common/MetaComponent";
-const metadata = {
-  title: "Freeio - Freelance Marketplace ReactJs Template | Manage Job",
-};
+import { useEffect } from "react";
+import useAuthStore from "@/store/authStore";
+import { useNavigate } from "react-router-dom";
 
-export default function DasbPageManageJobs() {
+export default function ManageJobsPage() {
+  const { isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    // Redirect to login if not authenticated
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate]);
+  
+  const metadata = {
+    title: "Freeio - Manage Jobs",
+  };
+
   return (
     <>
       <MetaComponent meta={metadata} />
-      <MobileNavigation2 />
       <DashboardLayout>
-        <ManageJobInfo />
+        <ManageJobs />
       </DashboardLayout>
     </>
   );

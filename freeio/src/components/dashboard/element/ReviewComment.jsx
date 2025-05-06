@@ -33,7 +33,7 @@ export default function ReviewComment({ i, lenght }) {
           If you are going to use a passage of Lorem Ipsum, you need to be sure
           there isn't anything embarrassing hidden in the middle of text.
         </p>
-        <Link to="/service-single" className="ud-btn bgc-thm4 text-thm">
+        <Link to="/service-1" className="ud-btn bgc-thm4 text-thm">
           Respond
         </Link>
       </div>

@@ -1,6 +1,45 @@
 import { Link } from "react-router-dom";
+import { formatDistanceToNow } from 'date-fns';
+import { useAuth } from "../common/AuthContext";
 
 export default function ProjectCard1({ data }) {
+  const { isAuthenticated } = useAuth();
+  
+  // Format date to relative time
+  const getRelativeTime = (dateString) => {
+    try {
+      return formatDistanceToNow(new Date(dateString), { addSuffix: true });
+    } catch (error) {
+      return "recently";
+    }
+  };
+
+  // If data comes from the backend, it will have different field names
+  // compared to the static data
+  const isBackendData = !!data._id;
+
+  // Map data to a consistent format
+  const projectData = isBackendData
+    ? {
+        id: data._id,
+        title: data.title,
+        img: data.userId?.profileImage || "/images/team/client-1.png", // Use user's profile image if available
+        brief: data.description,
+        location: data.userId?.location?.city || "Unknown Location",
+        tags: data.skills || [],
+        category: data.category,
+        price: {
+          min: data.budget,
+          max: data.budget,
+        },
+        createdAt: data.createdAt,
+        status: data.status,
+      }
+    : {
+        ...data,
+        createdAt: new Date().toISOString(),
+      };
+
   return (
     <>
       <div className="freelancer-style1 bdr1 hover-box-shadow row ms-0 align-items-lg-center">
@@ -9,29 +48,29 @@ export default function ProjectCard1({ data }) {
             <div className="thumb w60 position-relative rounded-circle mb15-md">
               <img
                 className="rounded-circle mx-auto"
-                src={data.img}
+                src={projectData.img}
                 alt="rounded-circle"
               />
               <span className="online-badge2" />
             </div>
             <div className="details ml15 ml0-md mb15-md">
-              <h5 className="title mb-3">{data.title}</h5>
+              <h5 className="title mb-3">{projectData.title}</h5>
               <p className="mb-0 fz14 list-inline-item mb5-sm pe-1">
                 <i className="flaticon-place fz16 vam text-thm2 me-1" />{" "}
-                {data.location}
+                {projectData.location}
               </p>
               <p className="mb-0 fz14 list-inline-item mb5-sm pe-1">
                 <i className="flaticon-30-days fz16 vam text-thm2 me-1 bdrl1 pl15 pl0-xs bdrn-xs" />{" "}
-                2 hours ago
+                {getRelativeTime(projectData.createdAt)}
               </p>
               <p className="mb-0 fz14 list-inline-item mb5-sm">
                 <i className="flaticon-contract fz16 vam text-thm2 me-1 bdrl1 pl15 pl0-xs bdrn-xs" />{" "}
-                1 Received
+                {projectData.status || "Open"}
               </p>
-              <p className="text mt10">{data.brief}</p>
-              <div className="skill-tags d-flex align-items-center justify-content-start">
-                {data.tags.map((item, i) => (
-                  <span key={i} className={`tag ${i === 1 ? "mx10" : ""}`}>
+              <p className="text mt10">{projectData.brief}</p>
+              <div className="skill-tags d-flex align-items-center justify-content-start flex-wrap">
+                {Array.isArray(projectData.tags) && projectData.tags.map((item, i) => (
+                  <span key={i} className={`tag ${i === 1 ? "mx10" : "me-10"}`}>
                     {item}
                   </span>
                 ))}
@@ -43,18 +82,30 @@ export default function ProjectCard1({ data }) {
           <div className="details">
             <div className="text-lg-end">
               <h4>
-                ${data.price.min} - ${data.price.max}
+                ${typeof projectData.price === 'object' 
+                  ? `${projectData.price.min}${projectData.price.max !== projectData.price.min ? ` - $${projectData.price.max}` : ''}`
+                  : projectData.price}
               </h4>
-              <p className="text">Hourly Rate</p>
+              <p className="text">Budget</p>
             </div>
             <div className="d-grid mt15">
-              <Link
-                to={`/project-single/${data.id}`}
-                className="ud-btn btn-light-thm"
-              >
-                Send Proposal
-                <i className="fal fa-arrow-right-long" />
-              </Link>
+              {isAuthenticated ? (
+                <Link
+                  to={`/project-single/${projectData.id}`}
+                  className="ud-btn btn-light-thm"
+                >
+                  Send Proposal
+                  <i className="fal fa-arrow-right-long" />
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  className="ud-btn btn-light-thm"
+                >
+                  Login to Apply
+                  <i className="fal fa-arrow-right-long" />
+                </Link>
+              )}
             </div>
           </div>
         </div>

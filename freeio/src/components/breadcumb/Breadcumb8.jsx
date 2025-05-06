@@ -2,10 +2,11 @@ import { product1 } from "@/data/product";
 
 import { useParams } from "react-router-dom";
 
-export default function Breadcumb8() {
+export default function Breadcumb8({ title }) {
   let { id } = useParams();
 
-  const data = product1.find((item) => item.id == id);
+  const data = id ? product1.find((item) => item.id == id) : null;
+  const displayTitle = title || (data ? data.title : "I will design website UI UX in adobe xd or figma");
 
   return (
     <>
@@ -30,11 +31,7 @@ export default function Breadcumb8() {
             <div className="row wow fadeInUp">
               <div className="col-xl-7">
                 <div className="position-relative">
-                  {data ? (
-                    <h2>{data.title}</h2>
-                  ) : (
-                    <h2>I will design website UI UX in adobe xd or figma</h2>
-                  )}
+                  <h2>{displayTitle}</h2>
                   <div className="list-meta mt30">
                     {data ? (
                       <a className="list-inline-item mb5-sm">
