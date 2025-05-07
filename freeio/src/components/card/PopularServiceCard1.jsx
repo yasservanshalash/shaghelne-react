@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function PopularServiceCard1({
   data,
@@ -10,6 +10,19 @@ export default function PopularServiceCard1({
 }) {
   const [isFavActive, setFavActive] = useState(false);
   const { pathname } = useLocation();
+
+  // Debug service ID format
+  useEffect(() => {
+    console.log(`PopularServiceCard1 - Service data:`, {
+      id: data.id,
+      _id: data._id,
+      idType: typeof data.id,
+      title: data.title
+    });
+  }, [data]);
+  
+  // Get the appropriate ID for the service (MongoDB ObjectId if available)
+  const serviceId = data._id || data.id;
 
   return (
     <>
@@ -38,7 +51,7 @@ export default function PopularServiceCard1({
         <div className={`list-content ${isContentExpanded ? "px-0" : ""}`}>
           <p className="list-text body-color fz14 mb-1">{data.category}</p>
           <h5 className="list-title">
-            <Link to={`/service-single/${data.id}`}>
+            <Link to={`/service-single/${serviceId}`}>
               {data.title.slice(0, 40) + "..."}
             </Link>
           </h5>

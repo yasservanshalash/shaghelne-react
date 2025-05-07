@@ -1,168 +1,112 @@
 import { Link } from "react-router-dom";
 
-export default function ServiceDetailReviewInfo1() {
+export default function ServiceDetailReviewInfo1({ rating = 4.8, reviewCount = 12 }) {
+  // Calculate percentages for progress bars
+  const starPercentages = {
+    five: 78,
+    four: 12,
+    three: 5,
+    two: 3,
+    one: 2
+  };
+
+  // Calculate how many reviews for each star rating
+  const calculateReviewsForStars = (totalReviews, percentage) => {
+    return Math.round((percentage / 100) * totalReviews);
+  };
+
   return (
     <>
-      <div className="product_single_content mb50">
+      <div className="product_single_content mb45">
         <div className="mbp_pagination_comments">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="total_review mb30 mt45">
-                <h4>80 Reviews</h4>
-              </div>
-              <div className="d-md-flex align-items-center mb30">
-                <div className="total-review-box d-flex align-items-center text-center mb30-sm">
-                  <div className="wrapper mx-auto">
-                    <div className="t-review mb15">4.96</div>
-                    <h5>Exceptional</h5>
-                    <p className="text mb-0">3,014 reviews</p>
+          <div className="total_review d-flex align-items-center justify-content-between mb20">
+            <h4 className="mb-0">Reviews</h4>
+            <div className="star-rating">
+              <span className="fz14">
+                {rating} Ratings, {reviewCount} Reviews
+              </span>
+            </div>
+          </div>
+          <div className="review_content pc20">
+            <div className="d-flex">
+              <div className="sspd_review_left">
+                <div className="ui_content">
+                  <div className="ui_content_style ps-0">
+                    <h4 className="m0">{rating}</h4>
+                    <ul>
+                      <li>
+                        <i className="fas fa-star"></i>
+                      </li>
+                      <li>
+                        <i className="fas fa-star"></i>
+                      </li>
+                      <li>
+                        <i className="fas fa-star"></i>
+                      </li>
+                      <li>
+                        <i className="fas fa-star"></i>
+                      </li>
+                      <li>
+                        <i className="fas fa-star"></i>
+                      </li>
+                    </ul>
+                    <span className="mr10">{reviewCount} reviews</span>
                   </div>
                 </div>
-                <div className="wrapper ml60 ml0-sm">
-                  <div className="review-list d-flex align-items-center mb10">
-                    <div className="list-number">5 Star</div>
+              </div>
+              <div className="sspd_review_right">
+                <div className="progress_item">
+                  <div className="item">
+                    <h5 className="mb0 fz14">5 Star</h5>
                     <div className="progress">
                       <div
                         className="progress-bar"
-                        style={{
-                          width: "90%",
-                        }}
-                        aria-valuenow={90}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
+                        style={{ width: `${starPercentages.five}%` }}
+                      ></div>
                     </div>
-                    <div className="value text-end">58</div>
+                    <span className="fz14">{calculateReviewsForStars(reviewCount, starPercentages.five)}</span>
                   </div>
-                  <div className="review-list d-flex align-items-center mb10">
-                    <div className="list-number">4 Star</div>
-                    <div className="progress">
-                      <div
-                        className="progress-bar w-75"
-                        aria-valuenow={75}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
-                    </div>
-                    <div className="value text-end">20</div>
-                  </div>
-                  <div className="review-list d-flex align-items-center mb10">
-                    <div className="list-number">3 Star</div>
-                    <div className="progress">
-                      <div
-                        className="progress-bar w-50"
-                        aria-valuenow={50}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
-                    </div>
-                    <div className="value text-end">15</div>
-                  </div>
-                  <div className="review-list d-flex align-items-center mb10">
-                    <div className="list-number">2 Star</div>
+                  <div className="item">
+                    <h5 className="mb0 fz14">4 Star</h5>
                     <div className="progress">
                       <div
                         className="progress-bar"
-                        style={{
-                          width: "30%",
-                        }}
-                        aria-valuenow={30}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
+                        style={{ width: `${starPercentages.four}%` }}
+                      ></div>
                     </div>
-                    <div className="value text-end">2</div>
+                    <span className="fz14">{calculateReviewsForStars(reviewCount, starPercentages.four)}</span>
                   </div>
-                  <div className="review-list d-flex align-items-center mb10">
-                    <div className="list-number">1 Star</div>
+                  <div className="item">
+                    <h5 className="mb0 fz14">3 Star</h5>
                     <div className="progress">
                       <div
                         className="progress-bar"
-                        style={{
-                          width: "20%",
-                        }}
-                        aria-valuenow={10}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      />
+                        style={{ width: `${starPercentages.three}%` }}
+                      ></div>
                     </div>
-                    <div className="value text-end">1</div>
+                    <span className="fz14">{calculateReviewsForStars(reviewCount, starPercentages.three)}</span>
+                  </div>
+                  <div className="item">
+                    <h5 className="mb0 fz14">2 Star</h5>
+                    <div className="progress">
+                      <div
+                        className="progress-bar"
+                        style={{ width: `${starPercentages.two}%` }}
+                      ></div>
+                    </div>
+                    <span className="fz14">{calculateReviewsForStars(reviewCount, starPercentages.two)}</span>
+                  </div>
+                  <div className="item">
+                    <h5 className="mb0 fz14">1 Star</h5>
+                    <div className="progress">
+                      <div
+                        className="progress-bar"
+                        style={{ width: `${starPercentages.one}%` }}
+                      ></div>
+                    </div>
+                    <span className="fz14">{calculateReviewsForStars(reviewCount, starPercentages.one)}</span>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="col-md-12">
-              <div className="mbp_first position-relative d-flex align-items-center justify-content-start mb30-sm">
-                <img
-                  src="/images/blog/comments-2.png"
-                  className="mr-3"
-                  alt="comments-2.png"
-                />
-                <div className="ml20">
-                  <h6 className="mt-0 mb-0">Bessie Cooper</h6>
-                  <div>
-                    <span className="fz14">12 March 2022</span>
-                  </div>
-                </div>
-              </div>
-              <p className="text mt20 mb20">
-                There are many variations of passages of Lorem Ipsum available,
-                but the majority have suffered alteration in some form, by
-                injected humour, or randomised words which don't look even
-                slightly believable. If you are going to use a passage of Lorem
-                Ipsum, you need to be sure there isn't anything embarrassing
-                hidden in the middle of text.
-              </p>
-              <div className="review_cansel_btns d-flex">
-                <a>
-                  <i className="fas fa-thumbs-up" />
-                  Helpful
-                </a>
-                <a>
-                  <i className="fas fa-thumbs-down" />
-                  Not helpful
-                </a>
-              </div>
-            </div>
-            <div className="col-md-12">
-              <div className="mbp_first position-relative d-flex align-items-center justify-content-start mt30 mb30-sm">
-                <img
-                  src="/images/blog/comments-2.png"
-                  className="mr-3"
-                  alt="comments-2.png"
-                />
-                <div className="ml20">
-                  <h6 className="mt-0 mb-0">Darrell Steward</h6>
-                  <div>
-                    <span className="fz14">12 March 2022</span>
-                  </div>
-                </div>
-              </div>
-              <p className="text mt20 mb20">
-                There are many variations of passages of Lorem Ipsum available,
-                but the majority have suffered alteration in some form, by
-                injected humour, or randomised words which don't look even
-                slightly believable. If you are going to use a passage of Lorem
-                Ipsum, you need to be sure there isn't anything embarrassing
-                hidden in the middle of text.
-              </p>
-              <div className="review_cansel_btns d-flex pb30">
-                <a>
-                  <i className="fas fa-thumbs-up" />
-                  Helpful
-                </a>
-                <a>
-                  <i className="fas fa-thumbs-down" />
-                  Not helpful
-                </a>
-              </div>
-            </div>
-            <div className="col-md-12">
-              <div className="position-relative bdrb1 pb50">
-                <Link to="/service-1" className="ud-btn btn-light-thm">
-                  Browse similar services
-                  <i className="fal fa-arrow-right-long" />
-                </Link>
               </div>
             </div>
           </div>

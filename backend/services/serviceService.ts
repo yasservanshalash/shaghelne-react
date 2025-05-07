@@ -60,6 +60,7 @@ class ServiceService {
       // Get paginated results
       const services = await Service.find(query)
         .populate('userId', 'name profileImage rating')
+        .sort({ sequentialId: 1 })
         .skip(skip)
         .limit(limit);
         
@@ -80,7 +81,23 @@ class ServiceService {
   
   static async getById(id: string) {
     try {
-      const service = await Service.findById(id).populate('userId', 'name profileImage rating');
+      let service;
+      
+      // First try to parse the ID as a number for sequentialId lookup
+      const numericId = parseInt(id, 10);
+      
+      if (!isNaN(numericId)) {
+        // If it's a valid number, look up by sequentialId
+        console.log(`Looking up service by sequentialId: ${numericId}`);
+        service = await Service.findOne({ sequentialId: numericId }).populate('userId', 'name profileImage rating');
+      } else if (Types.ObjectId.isValid(id)) {
+        // If not a number but a valid ObjectId, look up by _id
+        console.log(`Looking up service by ObjectId: ${id}`);
+        service = await Service.findById(id).populate('userId', 'name profileImage rating');
+      } else {
+        // Neither a valid number nor ObjectId
+        throw new Error('Invalid ID format');
+      }
       
       if (!service) {
         throw new Error('Service not found');
@@ -95,9 +112,14 @@ class ServiceService {
   
   static async create(userId: string, serviceData: any) {
     try {
+      // Get the next sequential ID
+      const highestService = await Service.findOne().sort('-sequentialId');
+      const nextId = highestService ? highestService.sequentialId + 1 : 1;
+      
       const newService = new Service({
         ...serviceData,
         userId,
+        sequentialId: nextId,
         status: 'active',
         createdAt: new Date(),
         updatedAt: new Date()
@@ -235,7 +257,7 @@ class ServiceService {
       // Get paginated results
       const services = await Service.find(query)
         .populate('userId', 'name profileImage rating')
-        .sort({ rating: -1, createdAt: -1 })
+        .sort({ sequentialId: 1 })
         .skip(skip)
         .limit(limit);
         

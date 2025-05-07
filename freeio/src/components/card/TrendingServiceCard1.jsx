@@ -1,13 +1,29 @@
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function TrendingServiceCard1({ data }) {
   const [isFavActive, setFavActive] = useState(false);
 
   const { pathname } = useLocation();
+  
+  // Enhanced debugging to ensure correct ID is used in links
+  useEffect(() => {
+    if (data) {
+      console.log(`TrendingServiceCard1 - Service data for link:`, {
+        id: data.id,
+        idType: typeof data.id,
+        title: data.title,
+        linkPath: data.id ? `/service-single/${data.id}` : '/service-single'
+      });
+    }
+  }, [data]);
 
+  // Ensure service ID is explicitly converted to string and is not null/undefined
+  const serviceId = data && data.id ? String(data.id) : null;
+  const serviceLink = serviceId ? `/service-single/${serviceId}` : `/service-single`;
+  
   return (
     <>
       <div
@@ -56,7 +72,7 @@ export default function TrendingServiceCard1({ data }) {
         <div className={`list-content ${pathname === "/home-8" ? "px-0" : ""}`}>
           <p className="list-text body-color fz14 mb-1">{data.category}</p>
           <h5 className="list-title">
-            <Link to={data.id ? `/service-single/${data.id}` : `/service-single`}>
+            <Link to={serviceLink}>
               {data.title.slice(0, 40) + "..."}
             </Link>
           </h5>

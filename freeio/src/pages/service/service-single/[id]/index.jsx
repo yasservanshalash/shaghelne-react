@@ -6,7 +6,6 @@ import MetaComponent from "@/components/common/MetaComponent";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useServiceStore from "@/store/serviceStore";
-import { product1 } from "@/data/product";
 
 export default function ServicePageSingle11() {
   const { id } = useParams();
@@ -15,44 +14,30 @@ export default function ServicePageSingle11() {
   const [loading, setLoading] = useState(true);
   const { fetchServiceById, isLoading, error } = useServiceStore();
   
+  // DEBUG: Log URL and parameters
+  console.log(`ServicePageSingle11 - Component mounted with URL params:`, { 
+    id, 
+    type: typeof id,
+    url: window.location.href,
+    path: window.location.pathname
+  });
+  
   useEffect(() => {
-    // For hardcoded ID=1 links, redirect to service listing page
-    if (id === "1") {
-      console.log("ServicePageSingle11 - Redirecting from hardcoded ID=1 to service-1 listing page");
-      navigate("/service-1", { replace: true });
-      return;
-    }
-    
     // Find the service based on ID from the URL
     if (id) {
       console.log("ServicePageSingle11 - Requested service ID:", id);
       
       const loadService = async () => {
         try {
+          console.log(`ServicePageSingle11 - About to call fetchServiceById with ID: ${id}`);
           const serviceData = await fetchServiceById(id);
           console.log(`ServicePageSingle11 - Loaded service: ID=${id}, Title="${serviceData?.title}"`, serviceData);
           setService(serviceData);
           setLoading(false);
         } catch (err) {
           console.error("Error loading service:", err);
-          
-          // If API fails, try to find service directly from product1 data
-          console.log("ServicePageSingle11 - Falling back to direct product1 lookup");
-          const directFallbackService = product1.find(item => item.id == id);
-          
-          if (directFallbackService) {
-            console.log(`ServicePageSingle11 - Found service directly in product1: ID=${id}, Title="${directFallbackService.title}"`);
-            setService(directFallbackService);
-          } else {
-            console.error(`ServicePageSingle11 - Service ID ${id} not found in product1 data`);
-            // Redirect to first available service if this one doesn't exist
-            if (product1.length > 0) {
-              console.log(`ServicePageSingle11 - Redirecting to first available service (ID=${product1[0].id})`);
-              navigate(`/service-single/${product1[0].id}`, { replace: true });
-              return;
-            }
-          }
           setLoading(false);
+          // Show error message to user instead of redirecting
         }
       };
       
@@ -88,6 +73,34 @@ export default function ServicePageSingle11() {
                   <span className="visually-hidden">Loading...</span>
                 </div>
                 <p className="mt20">Loading service details, please wait...</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : error ? (
+        <section className="pt50 pb90">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-12 text-center">
+                <h3>Error Loading Service</h3>
+                <p className="mt20">There was an error loading this service. Please ensure the API is running.</p>
+                <button className="ud-btn btn-thm mt20" onClick={() => navigate('/service-1')}>
+                  View All Services
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : !service ? (
+        <section className="pt50 pb90">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-12 text-center">
+                <h3>Service Not Found</h3>
+                <p className="mt20">The requested service could not be found.</p>
+                <button className="ud-btn btn-thm mt20" onClick={() => navigate('/service-1')}>
+                  View All Services
+                </button>
               </div>
             </div>
           </div>

@@ -55,6 +55,7 @@ export default function Listing1() {
 
   // Handle page change from pagination component
   const handlePageChange = (page) => {
+    console.log(`Changing to page ${page}, current page is ${currentPage}`);
     fetchFiltered(page);
     window.scrollTo(0, 0);
   };
@@ -121,7 +122,7 @@ export default function Listing1() {
                 <div className="mbp_pagination">
                   <Pagination1 
                     currentPage={currentPage}
-                    totalPages={pagination.pages || 1}
+                    itemsPerPage={12}
                     totalItems={pagination.total || 0}
                     onPageChange={handlePageChange}
                   />
