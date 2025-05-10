@@ -59,17 +59,55 @@ const useJobStore = create((set, get) => ({
   fetchUserJobs: async (userId, token) => {
     set({ isLoading: true, error: null });
     try {
-      const data = await jobService.getJobsByUser(userId, token);
+      if (!userId) {
+        const errorMsg = "User ID is required";
+        console.error(errorMsg);
+        set({ 
+          isLoading: false, 
+          error: errorMsg,
+          userJobs: [] 
+        });
+        throw new Error(errorMsg);
+      }
+      
+      if (!token) {
+        const errorMsg = "Authentication token is required";
+        console.error(errorMsg);
+        set({ 
+          isLoading: false, 
+          error: errorMsg,
+          userJobs: [] 
+        });
+        throw new Error(errorMsg);
+      }
+      
+      console.log(`Fetching jobs for user ${userId} with token: ${token.substring(0, 10)}...`);
+      
+      const data = await jobService.getJobsByUser(userId.toString(), token);
+      
+      // Ensure data is an array to prevent rendering errors
+      const safeData = Array.isArray(data) ? data : [];
+      
+      console.log(`Fetched ${safeData.length} jobs successfully`);
       
       set({
-        userJobs: data,
+        userJobs: safeData,
         isLoading: false,
       });
       
-      return data;
+      return safeData;
     } catch (error) {
-      set({ isLoading: false, error: error.message });
       console.error('Error fetching user jobs:', error);
+      // Set a more descriptive error message
+      const errorMessage = error.message || 'Failed to fetch user jobs. Please try again later.';
+      set({ 
+        isLoading: false, 
+        error: errorMessage,
+        userJobs: [] // Set empty array to prevent null/undefined issues
+      });
+      
+      // Re-throw for component-level handling
+      throw error;
     }
   },
 

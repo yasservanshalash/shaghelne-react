@@ -1,13 +1,17 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { authApi, setAuthToken, setAuthUser, clearAuth } from '../utils/auth';
+import { authApi, setAuthToken, setAuthUser, clearAuth, initializeAuth } from '../utils/auth';
+
+// Get initial auth state from localStorage
+const initialState = initializeAuth();
 
 const useAuthStore = create(
   persist(
     (set) => ({
-      user: null,
-      token: null,
-      isAuthenticated: false,
+      // Initialize with values from localStorage
+      user: initialState.user,
+      token: initialState.token,
+      isAuthenticated: initialState.isAuthenticated,
       isLoading: false,
       error: null,
 

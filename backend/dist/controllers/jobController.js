@@ -62,10 +62,10 @@ class JobController {
                 const userId = req.user.id;
                 const jobData = req.body;
                 // Validate required fields
-                if (!jobData.title || !jobData.description || !jobData.budget ||
-                    !jobData.category || !jobData.deadline) {
+                if (!jobData.title || !jobData.description || !jobData.salary ||
+                    !jobData.category) {
                     return res.status(400).json({
-                        message: 'Required fields: title, description, budget, category, deadline'
+                        message: 'Required fields: title, description, salary, category'
                     });
                 }
                 const job = yield jobService_1.default.create(userId, jobData);

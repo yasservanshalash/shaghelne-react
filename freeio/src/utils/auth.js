@@ -1,5 +1,5 @@
 // Constants
-export const API_URL = 'http://localhost:5000/api';
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Local storage keys
 export const TOKEN_KEY = 'auth-token';
@@ -33,6 +33,22 @@ export const setAuthUser = (user) => {
 export const getAuthUser = () => {
   const userJson = localStorage.getItem(USER_KEY);
   return userJson ? JSON.parse(userJson) : null;
+};
+
+// Initialize auth state from localStorage
+export const initializeAuth = () => {
+  const token = getAuthToken();
+  const user = getAuthUser();
+  
+  if (token) {
+    setAuthHeader(token);
+  }
+  
+  return {
+    user,
+    token,
+    isAuthenticated: !!(user && token),
+  };
 };
 
 export const clearAuth = () => {
@@ -91,13 +107,12 @@ export const authApi = {
       body: JSON.stringify(credentials),
     });
     
-    const data = await response.json();
-    
     if (!response.ok) {
-      throw new Error(data.message || 'Login failed');
+      const error = await response.json();
+      throw new Error(error.message || 'Login failed');
     }
     
-    return data;
+    return await response.json();
   },
   
   register: async (userData) => {
@@ -109,24 +124,27 @@ export const authApi = {
       body: JSON.stringify(userData),
     });
     
-    const data = await response.json();
-    
     if (!response.ok) {
-      throw new Error(data.message || 'Registration failed');
+      const error = await response.json();
+      throw new Error(error.message || 'Registration failed');
     }
     
-    return data;
+    return await response.json();
   },
   
   logout: async (token) => {
     try {
-      await fetch(`${API_URL}/auth/logout`, {
+      const response = await fetch(`${API_URL}/auth/logout`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Logout error:', error);
+      }
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -135,21 +153,20 @@ export const authApi = {
   },
   
   updateProfile: async (profileData, token) => {
-    const response = await fetch(`${API_URL}/auth/profile`, {
+    const response = await fetch(`${API_URL}/users/profile`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(profileData),
     });
     
-    const data = await response.json();
-    
     if (!response.ok) {
-      throw new Error(data.message || 'Profile update failed');
+      const error = await response.json();
+      throw new Error(error.message || 'Profile update failed');
     }
     
-    return data;
+    return await response.json();
   },
 }; 

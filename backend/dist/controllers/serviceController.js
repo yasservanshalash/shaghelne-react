@@ -54,6 +54,11 @@ class ServiceController {
                 if (error.message === 'Service not found') {
                     return res.status(404).json({ message: error.message });
                 }
+                if (error.message === 'Invalid ID format') {
+                    return res.status(400).json({
+                        message: 'Invalid service ID format. Please use a numeric ID (1, 2, 3) or a valid MongoDB ObjectID.'
+                    });
+                }
                 return res.status(500).json({ message: 'Server error' });
             }
         });

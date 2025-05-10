@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Service_1 = __importDefault(require("../models/Service"));
+const mongoose_1 = require("mongoose");
 class ServiceService {
     static getAll() {
         return __awaiter(this, arguments, void 0, function* (filters = {}) {
@@ -45,6 +46,7 @@ class ServiceService {
                 // Get paginated results
                 const services = yield Service_1.default.find(query)
                     .populate('userId', 'name profileImage rating')
+                    .sort({ sequentialId: 1 })
                     .skip(skip)
                     .limit(limit);
                 return {
@@ -66,7 +68,23 @@ class ServiceService {
     static getById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const service = yield Service_1.default.findById(id).populate('userId', 'name profileImage rating');
+                let service;
+                // First try to parse the ID as a number for sequentialId lookup
+                const numericId = parseInt(id, 10);
+                if (!isNaN(numericId)) {
+                    // If it's a valid number, look up by sequentialId
+                    console.log(`Looking up service by sequentialId: ${numericId}`);
+                    service = yield Service_1.default.findOne({ sequentialId: numericId }).populate('userId', 'name profileImage rating');
+                }
+                else if (mongoose_1.Types.ObjectId.isValid(id)) {
+                    // If not a number but a valid ObjectId, look up by _id
+                    console.log(`Looking up service by ObjectId: ${id}`);
+                    service = yield Service_1.default.findById(id).populate('userId', 'name profileImage rating');
+                }
+                else {
+                    // Neither a valid number nor ObjectId
+                    throw new Error('Invalid ID format');
+                }
                 if (!service) {
                     throw new Error('Service not found');
                 }
@@ -81,7 +99,10 @@ class ServiceService {
     static create(userId, serviceData) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newService = new Service_1.default(Object.assign(Object.assign({}, serviceData), { userId, status: 'active', createdAt: new Date(), updatedAt: new Date() }));
+                // Get the next sequential ID
+                const highestService = yield Service_1.default.findOne().sort('-sequentialId');
+                const nextId = highestService ? highestService.sequentialId + 1 : 1;
+                const newService = new Service_1.default(Object.assign(Object.assign({}, serviceData), { userId, sequentialId: nextId, status: 'active', createdAt: new Date(), updatedAt: new Date() }));
                 yield newService.save();
                 return newService;
             }
@@ -204,7 +225,7 @@ class ServiceService {
                 // Get paginated results
                 const services = yield Service_1.default.find(query)
                     .populate('userId', 'name profileImage rating')
-                    .sort({ rating: -1, createdAt: -1 })
+                    .sort({ sequentialId: 1 })
                     .skip(skip)
                     .limit(limit);
                 return {

@@ -61,18 +61,53 @@ export const jobService = {
         throw new Error('Authentication token is required');
       }
       
-      const response = await fetch(`${API_URL}/jobs/user/${userId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch user jobs');
+      if (!userId) {
+        throw new Error('User ID is required');
       }
       
-      return await response.json();
+      // Ensure userId is a string
+      const userIdStr = String(userId);
+      
+      // Log the request for debugging
+      console.log(`API Call: Fetching jobs for user ${userIdStr}`);
+      console.log(`API URL: ${API_URL}`);
+      console.log(`Auth token available: ${!!token}, length: ${token.length}`);
+      
+      const requestUrl = `${API_URL}/jobs/user/${userIdStr}`;
+      console.log(`Full request URL: ${requestUrl}`);
+      
+      const response = await fetch(requestUrl, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      }).catch(err => {
+        console.error('Network error during fetch:', err);
+        throw new Error(`Network error: ${err.message}. Please check your internet connection.`);
+      });
+      
+      if (!response) {
+        throw new Error('No response received from server');
+      }
+      
+      console.log(`Response status: ${response.status} ${response.statusText}`);
+      
+      if (!response.ok) {
+        let errorMessage = 'Failed to fetch user jobs';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+          console.error('Error response data:', errorData);
+        } catch (jsonError) {
+          console.error('Error parsing error response:', jsonError);
+        }
+        throw new Error(errorMessage);
+      }
+      
+      const data = await response.json();
+      console.log(`Fetched ${Array.isArray(data) ? data.length : 0} jobs`);
+      
+      return Array.isArray(data) ? data : [];
     } catch (error) {
       console.error(`Error fetching jobs for user ${userId}:`, error);
       throw error;
